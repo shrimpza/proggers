@@ -16,6 +16,10 @@ header, footer {
 	padding: 10px 0 10px 0;
 }
 
+footer {
+	text-align: right;
+}
+
 h1, h2 {
 	margin: 0;
 }
