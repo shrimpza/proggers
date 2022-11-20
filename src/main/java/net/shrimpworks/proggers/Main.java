@@ -5,11 +5,15 @@ import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.shrimpworks.proggers.service.ProgressService;
 import net.shrimpworks.proggers.service.ProgressStore;
 import net.shrimpworks.proggers.www.WebService;
 
 public class Main {
+	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	private static final String DEFAULT_BIND_HOST = "127.0.0.1";
 	private static final int DEFAULT_PORT = 8088;
@@ -23,7 +27,7 @@ public class Main {
 
 		final WebService webService = new WebService(service, new InetSocketAddress(DEFAULT_BIND_HOST, DEFAULT_PORT));
 
-		System.out.printf("Started and listening on port %d with data store in %s%n", DEFAULT_PORT, dataPath);
+		log.info("Started and listening on port {} with data store in {}", DEFAULT_PORT, dataPath);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(webService::close));
 	}

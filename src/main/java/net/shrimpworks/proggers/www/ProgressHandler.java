@@ -1,5 +1,6 @@
 package net.shrimpworks.proggers.www;
 
+import java.beans.ConstructorProperties;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +19,8 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import com.sun.net.httpserver.HttpExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.shrimpworks.proggers.entity.Progress;
 import net.shrimpworks.proggers.service.ProgressService;
@@ -26,6 +29,7 @@ import static net.shrimpworks.proggers.service.ProgressService.DeleteConsumer;
 import static net.shrimpworks.proggers.service.ProgressService.ProgressConsumer;
 
 public class ProgressHandler extends Handler implements ProgressConsumer, DeleteConsumer {
+	private static final Logger log = LoggerFactory.getLogger(ProgressHandler.class);
 
 	private static final long MAX_BODY_SIZE = 256;
 	private static final int MAX_SUBSCRIBERS = 1024;
@@ -82,15 +86,17 @@ public class ProgressHandler extends Handler implements ProgressConsumer, Delete
 					respondPlain(exchange, 405, "Method not supported");
 			}
 		} catch (Exception e) {
-			e.printStackTrace(); // TODO log
+			log.warn("Exception while handling progress request: {}", e, e);
 			respondPlain(exchange, 500, "Something went wrong");
+		} finally {
+			logHit(exchange);
 		}
 	}
 
 	private void handleGet(HttpExchange exchange) throws InterruptedException {
 		String[] pathParts = exchange.getRequestURI().getPath().split("/");
 		if (pathParts.length < 3 || pathParts[2].isBlank()) {
-			respondPlain(exchange, 404, "missing group");
+			respondPlain(exchange, 400, "missing group");
 			return;
 		}
 
@@ -134,11 +140,11 @@ public class ProgressHandler extends Handler implements ProgressConsumer, Delete
 
 		String[] pathParts = exchange.getRequestURI().getPath().split("/");
 		if (pathParts.length < 3 || pathParts[2].isBlank()) {
-			respondPlain(exchange, 404, "missing group");
+			respondPlain(exchange, 400, "missing group");
 			return;
 		}
 		if (pathParts.length < 4 || pathParts[3].isBlank()) {
-			respondPlain(exchange, 404, "missing name");
+			respondPlain(exchange, 400, "missing name");
 			return;
 		}
 
@@ -177,14 +183,13 @@ public class ProgressHandler extends Handler implements ProgressConsumer, Delete
 	}
 
 	private void handleDelete(HttpExchange exchange) throws IOException {
-		// TODO
 		String[] pathParts = exchange.getRequestURI().getPath().split("/");
 		if (pathParts.length < 3 || pathParts[2].isBlank()) {
-			respondPlain(exchange, 404, "missing group");
+			respondPlain(exchange, 400, "missing group");
 			return;
 		}
 		if (pathParts.length < 4 || pathParts[3].isBlank()) {
-			respondPlain(exchange, 404, "missing name");
+			respondPlain(exchange, 400, "missing name");
 			return;
 		}
 
@@ -209,7 +214,7 @@ public class ProgressHandler extends Handler implements ProgressConsumer, Delete
 				params.get("ttl")
 			);
 		} catch (IOException e) {
-			// TODO log
+			log.error("Failed to store progress: {}", e, e);
 			throw new IllegalStateException("Failed to store requested progress");
 		}
 	}
@@ -243,10 +248,16 @@ public class ProgressHandler extends Handler implements ProgressConsumer, Delete
 		}
 	}
 
-	private static class SubscriberUpdate {
+	public static class SubscriberUpdate {
 
 		public final Progress updated;
 		public final String deleted;
+
+		@ConstructorProperties({"updated", "deleted"})
+		public SubscriberUpdate(Progress updated, String deleted) {
+			this.updated = updated;
+			this.deleted = deleted;
+		}
 
 		public SubscriberUpdate(Progress updated) {
 			this.updated = updated;

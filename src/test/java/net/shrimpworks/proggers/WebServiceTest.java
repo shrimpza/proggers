@@ -11,13 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import net.shrimpworks.proggers.entity.Progress;
 import net.shrimpworks.proggers.service.ProgressService;
 import net.shrimpworks.proggers.service.ProgressStore;
+import net.shrimpworks.proggers.www.ProgressHandler;
 import net.shrimpworks.proggers.www.WebService;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,7 +46,8 @@ public class WebServiceTest {
 	@Test
 	public void sendProgressOK() throws IOException, InterruptedException {
 		HttpRequest rq = builder
-			.POST(HttpRequest.BodyPublishers.ofString("name=lol&group=testing&max=9001&progress=5800&ttl=19m"))
+			.uri(URI.create("http://localhost:58780/progress/testing/lol"))
+			.POST(HttpRequest.BodyPublishers.ofString("max=9001&progress=5800&ttl=19m"))
 			.build();
 
 		HttpResponse<String> send = client.send(rq, HttpResponse.BodyHandlers.ofString());
@@ -58,9 +60,9 @@ public class WebServiceTest {
 			.build();
 		HttpResponse<String> recv = client.send(rq, HttpResponse.BodyHandlers.ofString());
 		assertEquals(200, recv.statusCode());
-		Set<Progress> progresses = JSON.fromString(recv.body(), new TypeReference<>() {});
+		Set<ProgressHandler.SubscriberUpdate> progresses = JSON.fromString(recv.body(), new TypeReference<>() {});
 		assertEquals(1, progresses.size());
-		assertEquals("lol", progresses.stream().findFirst().get().name);
+		assertEquals("lol", progresses.stream().findFirst().get().updated.name);
 	}
 
 	@Test
@@ -93,7 +95,7 @@ public class WebServiceTest {
 		assertEquals(400, send.statusCode());
 	}
 
-	@Test
+	@Disabled
 	public void maxSubscribers() throws IOException, InterruptedException {
 		HttpRequest.Builder spamBuilder = builder
 			.GET();
@@ -128,12 +130,5 @@ public class WebServiceTest {
 		assertEquals(200, indexRoot.statusCode());
 
 		assertEquals(index.body(), indexRoot.body());
-
-		rq = builder
-			.uri(URI.create("http://localhost:58780/index.css"))
-			.GET().build();
-
-		HttpResponse<Void> none = client.send(rq, HttpResponse.BodyHandlers.discarding());
-		assertEquals(404, none.statusCode());
 	}
 }
