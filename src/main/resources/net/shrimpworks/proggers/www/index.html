@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Proggers</title>
+	<link rel="stylesheet" href="/static/style.css">
+
+	<link rel="icon" type="image/png" sizes="148x148" href="/static/images/logo-148.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="/static/images/logo-96.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/static/images/logo-32.png">
+
+	<link rel="favicon" type="image/png" href="/static/images/logo-32.png">
+</head>
+
+<body>
+
+<header>
+	<section class="page">
+		<h1>
+			<a href="/">
+				<img src="/static/images/logo-96.png">
+				Proggers
+			</a>
+		</h1>
+		<nav>
+			<a href="/info.html">Info</a>
+		</nav>
+	</section>
+</header>
+
+<template id="bar_template">
+	<div class="bar">
+		<h2>My Bar</h2>
+		<div class="progress out" style="--c:#00bb00; --m:100; --p:0">
+			<div class="progress in bg"></div>
+			<div class="progress in fg"></div>
+			<div class="progress in over"></div>
+		</div>
+		<dl class="info">
+			<dt>Created</dt>
+			<dd class="created">2022-11-20 09:42:28</dd>
+			<dt>Updated</dt>
+			<dd class="updated">2022-11-20 09:43:44</dd>
+			<dt>Progress</dt>
+			<dd class="value">5890 / 9001 (nn%)</dd>
+		</dl>
+	</div>
+</template>
+
+<section id="bars" class="page">
+	<div id="placeholder">
+
+	</div>
+</section>
+
+<footer>
+	<div class="page">
+		<a href="https://shrimp.works/">ShrimpWorks</a>
+		| <a href="https://shrimp.works/">GitHub</a>
+	</div>
+</footer>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+plugins {
+	// Apply the application plugin to add support for building a CLI application in Java.
+	id 'application'
+}
+
+repositories {
+	// Use Maven Central for resolving dependencies.
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.0'
+}
+
+testing {
+	suites {
+		// Configure the built-in test suite
+		test {
+			// Use JUnit Jupiter test framework
+			useJUnitJupiter('5.8.1')
+		}
+	}
+}
+
+application {
+	// Define the main class for the application.
+	mainClass = 'net.shrimpworks.proggers.Main'
+}
