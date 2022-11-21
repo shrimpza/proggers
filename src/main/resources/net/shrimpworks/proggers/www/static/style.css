@@ -26,7 +26,7 @@ h1, h2 {
 
 header section {
 	display: grid;
-	grid-template-columns: 50% 50%;
+	grid-template-columns: auto 25%;
 	grid-template-areas: 'title nav';
 }
 

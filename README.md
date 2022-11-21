@@ -26,3 +26,8 @@ After executing an `assembleDist`, unzip/untar the output in
 `build/distributions`, change to the `proggers` directory that was extracted,
 and execute `./bin/proggers` (make this executable if you used the `.zip`
 package).
+
+## Usage
+
+Refer to the [Proggers Website Info Page](https://proggers.cloud/info.html)
+for usage information.

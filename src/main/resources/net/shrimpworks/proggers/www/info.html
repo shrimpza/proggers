@@ -48,7 +48,18 @@
 	</ul>
 
 	<h3>Creating or updating a progress bar</h3>
-	<p>Examples using Curl:</p>
+	<h4>Basic API</h4>
+	<pre>POST https://proggers.cloud/progress/:group/:name</pre>
+
+	<p>the following parameters are available, and may be provided either as query parameters or as a
+	form body:</p>
+	<ul>
+		<li><code>max</code> - (required) the maximum value of a progress bar, any floating point or whole number
+		<li><code>progress</code> - (required) the current value of a progress bar, any floating point or whole number
+		<li><code>color</code> - (optional) hex value of the progress bar
+	</ul>
+
+	<h4>Examples using Curl:</h4>
 	<pre># using form body parameters
 $ curl proggers.cloud/progress/my_group/progress_1 \
   -d "max=1&progress=0.39"
