@@ -2,6 +2,7 @@ package net.shrimpworks.proggers.www;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -43,6 +44,7 @@ public abstract class Handler implements HttpHandler {
 	protected void respondPlain(HttpExchange exchange, int status, String message) {
 		try {
 			exchange.getResponseHeaders().add("Content-Type", "text/plain");
+			exchange.getResponseHeaders().add("Cache-Control", "no-cache");
 			if (message == null || message.isEmpty()) {
 				exchange.sendResponseHeaders(status, -1);
 			} else {
@@ -59,6 +61,7 @@ public abstract class Handler implements HttpHandler {
 	protected void respondJson(HttpExchange exchange, int status, Object message) {
 		try {
 			exchange.getResponseHeaders().add("Content-Type", "application/json");
+			exchange.getResponseHeaders().add("Cache-Control", "no-cache");
 			if (message == null) {
 				exchange.sendResponseHeaders(status, -1);
 			} else {
@@ -73,7 +76,7 @@ public abstract class Handler implements HttpHandler {
 		}
 	}
 
-	protected void respondStream(HttpExchange exchange, String filename, InputStream stream, int status) {
+	protected void respondStream(HttpExchange exchange, String filename, String etag, Duration maxAge, InputStream stream, int status) {
 		try {
 			// hax maybe
 			String contentType = "text/plain";
@@ -85,7 +88,18 @@ public abstract class Handler implements HttpHandler {
 			else if (filename.endsWith("png")) contentType = "image/png";
 			exchange.getResponseHeaders().add("Content-Type", contentType);
 
-			if (stream == null || stream.available() == 0) {
+			exchange.getResponseHeaders().add("ETag", etag);
+
+			if (maxAge.isZero() || maxAge.isNegative()) {
+				exchange.getResponseHeaders().add("Cache-Control", "no-cache");
+			} else {
+				exchange.getResponseHeaders().add("Cache-Control", String.format("public, max-age=%d, immutable", maxAge.toSeconds()));
+			}
+
+			if (exchange.getRequestHeaders().getFirst("ETag") != null
+				&& exchange.getRequestHeaders().getFirst("ETag").equals(etag)) {
+				exchange.sendResponseHeaders(304, -1);
+			} else if (stream == null || stream.available() == 0) {
 				exchange.sendResponseHeaders(status, -1);
 			} else {
 				// assumes all bytes are ready in the stream - they should be for a local resource

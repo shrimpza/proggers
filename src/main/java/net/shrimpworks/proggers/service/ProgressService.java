@@ -105,7 +105,7 @@ public class ProgressService {
 		return String.format("%s_%s", group, name).toLowerCase();
 	}
 
-	private Duration stringToDuration(String str) {
+	public static Duration stringToDuration(String str) {
 		if (str == null || str.isBlank()) return null;
 
 		Matcher matcher = DURATION_STRING.matcher(str);
