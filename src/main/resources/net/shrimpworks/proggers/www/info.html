@@ -31,44 +31,50 @@
 </header>
 
 <article class="page">
-	<h2>What is this?</h2>
-	<p>Proggers is a simple service that hosts and displays progress bars in real time, wherever you are.</p>
-	<p>Progress can represent anything, as long as they have a maximum and current value.</p>
+	<section>
+		<h2>What is this?</h2>
+		<p>Proggers is a simple service that hosts and displays progress bars in real time, wherever you are.</p>
+		<p>Progress can represent anything, as long as they have a maximum and current value.
+	</section>
 
-	<h2>Why?</h2>
-	<p>Sometimes you want to execute a one-off long-running process, and you want to keep track of its
-		progress without being stuck at the screen or terminal you kicked the process off at.</p>
-	<p>Proggers is an excessively simple way of providing some visibility of such processes on your desktop,
-		on your phone, in your car, or anywhere else with a web browser and internet access, with a simple HTTP
-		request from your process to report its progress.</p>
 
-	<h2>Usage</h2>
-	<p>You can create your own progress bars on Proggers.</p>
-	<p>Before starting, these are the basic terms and concepts which apply to every progress bar you
-		create:</p>
-	<ul>
-		<li><code>group</code> - a grouping for your progress bars. Can be your name or any grouping
-			you like, alpha-numerics and underscore only.
-		<li><code>name</code> - a unique (within the group) name for a progress bar, used to refer
-		back to when updating progress, alpha-numerics and underscore only.
-		<li><code>max</code> - the maximum value of a progress bar, any floating point or whole number
-		<li><code>progress</code> - the current value of a progress bar, any floating point or whole number
-	</ul>
+	<section>
+		<h2>Why?</h2>
+		<p>Sometimes you want to execute a one-off long-running process, and you want to keep track of its
+			progress without being stuck at the screen or terminal you kicked the process off at.</p>
+		<p>Proggers is an excessively simple way of providing some visibility of such processes on your desktop,
+			on your phone, in your car, or anywhere else with a web browser and internet access, with a simple HTTP
+			request from your process to report its progress.</p>
+	</section>
 
-	<h3>Creating or updating a progress bar</h3>
-	<h4>Basic API</h4>
-	<pre>POST https://proggers.cloud/progress/:group/:name</pre>
+	<section>
+		<h2>Usage</h2>
+		<p>You can create your own progress bars on Proggers.</p>
+		<p>Before starting, these are the basic terms and concepts which apply to every progress bar you
+			create:</p>
+		<ul>
+			<li><code>group</code> - a grouping for your progress bars. Can be your name or any grouping
+				you like, alpha-numerics and underscore only.
+			<li><code>name</code> - a unique (within the group) name for a progress bar, used to refer
+				back to when updating progress, alpha-numerics and underscore only.
+			<li><code>max</code> - the maximum value of a progress bar, any floating point or whole number
+			<li><code>progress</code> - the current value of a progress bar, any floating point or whole number
+		</ul>
 
-	<p>the following parameters are available, and may be provided either as query parameters or as a
-	form body:</p>
-	<ul>
-		<li><code>max</code> - (required) the maximum value of a progress bar, any floating point or whole number
-		<li><code>progress</code> - (required) the current value of a progress bar, any floating point or whole number
-		<li><code>color</code> - (optional) hex value for the colour of the progress bar
-	</ul>
+		<h3>Creating or updating a progress bar</h3>
+		<h4>Basic API</h4>
+		<pre>POST https://proggers.cloud/progress/:group/:name</pre>
 
-	<h4>Examples using Curl:</h4>
-	<pre># using form body parameters
+		<p>the following parameters are available, and may be provided either as query parameters or as a
+			form body:</p>
+		<ul>
+			<li><code>max</code> - (required) the maximum value of a progress bar, any floating point or whole number
+			<li><code>progress</code> - (required) the current value of a progress bar, any floating point or whole number
+			<li><code>color</code> - (optional) hex value for the colour of the progress bar
+		</ul>
+
+		<h4>Examples using Curl:</h4>
+		<pre># using form body parameters
 $ curl proggers.cloud/progress/my_group/progress_1 \
   -d "max=1&progress=0.39"
 
@@ -76,32 +82,33 @@ $ curl proggers.cloud/progress/my_group/progress_1 \
 $ curl -X POST \
   "proggers.cloud/progress/my_group/some_process?max=95&progress=68"</pre>
 
-	<p>Progress bars will be created, and available at URL
-		<code>https://proggers.cloud/my_group</code> where <code>my_group</code> is the name of
-		the group you defined.</p>
-	<p>Updating the progress is a matter of calling the same URL again with updated
-		<code>progress</code> values (you can also change the <code>max</code> value).</p>
-	<p>If you want your progress bar to be a specific colour, you may specify that with the
-		<code>color</code> parameter.</p>
+		<p>Progress bars will be created, and available at URL
+			<code>https://proggers.cloud/my_group</code> where <code>my_group</code> is the name of
+			the group you defined.</p>
+		<p>Updating the progress is a matter of calling the same URL again with updated
+			<code>progress</code> values (you can also change the <code>max</code> value).</p>
+		<p>If you want your progress bar to be a specific colour, you may specify that with the
+			<code>color</code> parameter.</p>
 
-	<p>Progress bars will update in real-time while being viewed in a browser.</p>
+		<p>Progress bars will update in real-time while being viewed in a browser.</p>
 
-	<h3>Deleting a progress bar</h3>
-	<p>Examples using Curl:</p>
-	<pre>$ curl -X DELETE proggers.cloud/progress/my_group/progress_1</pre>
+		<h3>Deleting a progress bar</h3>
+		<p>Examples using Curl:</p>
+		<pre>$ curl -X DELETE proggers.cloud/progress/my_group/progress_1</pre>
 
-	<p>As this is a public service with no authentication or access control. If a progress bar is
-		in active use, it'll be automatically re-created next time an update is sent.</p>
+		<p>As this is a public service with no authentication or access control. If a progress bar is
+			in active use, it'll be automatically re-created next time an update is sent.</p>
 
-	<h3>Progress Bars availability and time-to-live</h3>
-	<p>Proggers offers no SLA on progress bar retention. By default, progress bars will be automatically
-		removed 7 days after their last update. Occasionally they may be removed earlier.</p>
+		<h3>Progress Bars availability and time-to-live</h3>
+		<p>Proggers offers no SLA on progress bar retention. By default, progress bars will be automatically
+			removed 7 days after their last update. Occasionally they may be removed earlier.</p>
 
 
-	<h2>Self Hosting</h2>
-	<p>If you prefer to host your own Proggers instance, feel free to grab the source from the
-		<a href="https://github.com/shrimpza/proggers">Proggers GitHub Repo</a> and deploy it yourself.</p>
+		<h2>Self Hosting</h2>
+		<p>If you prefer to host your own Proggers instance, feel free to grab the source from the
+			<a href="https://github.com/shrimpza/proggers">Proggers GitHub Repo</a> and deploy it yourself.</p>
 
+	</section>
 </article>
 
 <footer>

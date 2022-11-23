@@ -1,8 +1,9 @@
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #050412;
-	color: #bbb;
+	background-color: #111;
+	background-image: url("images/micro_carbon.png");
+	color: #aaa;
 	font-family: sans-serif;
 	font-size: 1.1em;
 }
@@ -60,9 +61,10 @@ section#bars {
 #bars .bar {
 	margin: 20px 0 20px 0;
 	padding: 20px;
-	background-color: #ffffff20;
 	border-radius: 10px;
-	box-shadow: 2px 2px 15px 1px #00000020;
+	box-shadow: inset 00px 00px 50px 0 #00000040;
+	border-top: 2px solid #444;
+	border-bottom: 2px solid #444;
 
 	cursor: pointer;
 }
@@ -75,7 +77,7 @@ section#bars {
 	width: 100%;
 	height: 40px;
 	position: relative;
-	border-radius: 20px;
+	border-radius: 10px;
 	overflow: hidden;
 	box-shadow: 2px 2px 15px 1px #00000020;
 }
@@ -104,7 +106,7 @@ section#bars {
 }
 
 #bars .progress.in.over {
-	background: linear-gradient(0deg, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 1) 80%, rgba(0, 255, 0, 0) 100%);
+	background: linear-gradient(0deg, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.4) 80%, rgba(0, 0, 0, 0) 100%);
 	opacity: 0.25;
 }
 
@@ -127,8 +129,17 @@ section#bars {
 }
 
 article {
+	margin-top: 20px !important;
 	line-height: 1.6em;
-	padding: 20px 0;
+	border-radius: 10px;
+	box-shadow: inset 00px 00px 50px 0 #00000040;
+	border-top: 2px solid #444;
+	border-bottom: 2px solid #444;
+}
+
+article section {
+	margin: 20px 0 20px 0;
+	padding: 0 20px 20px 20px;
 }
 
 code, pre {
