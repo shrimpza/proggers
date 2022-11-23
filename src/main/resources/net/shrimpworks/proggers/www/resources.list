@@ -1,10 +1,11 @@
 # file name												etag		cache max-age
 /index.html												1				7d
 /info.html												1				7d
+/robots.txt												1				30d
 /static/style.css									2				30d
 /static/script.js									1				30d
 /static/images/logo-192.png				1				120d
 /static/images/logo-96.png				1				120d
 /static/images/logo-38.png				1				120d
 /static/images/logo-32.png				1				120d
-/static/images/micro_carbon.png		1				240d
+/static/images/micro_carbon.png		1				365d
