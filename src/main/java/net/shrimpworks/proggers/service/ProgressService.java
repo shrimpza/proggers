@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -24,6 +25,7 @@ public class ProgressService {
 	private static final String[] RANDOM_COLOURS = new String[] { "bb", "00", "bb", "00", "55", "00", "bb" };
 	private static final Duration MAX_TTL = Duration.ofDays(7);
 	private static final Duration DEFAULT_TTL = Duration.ofDays(1);
+	private static final int MAX_HISTORY_SIZE = 4;
 	private static final Pattern DURATION_STRING = Pattern.compile("(\\d+)([smhd])");
 
 	private final ProgressStore store;
@@ -64,11 +66,14 @@ public class ProgressService {
 		ZonedDateTime creationTime = current != null ? current.created : ZonedDateTime.now();
 		color = current != null && color == null ? current.color : color;
 		ttl = current != null && ttl == null ? current.ttl : ttl;
+		TreeMap<Double, ZonedDateTime> history = current != null ? current.history : new TreeMap<>();
+		history.put(progress, ZonedDateTime.now());
+		while (history.size() > MAX_HISTORY_SIZE) history.remove(history.firstKey());
 
 		if (color == null) color = randomColor();
 		if (ttl == null) ttl = DEFAULT_TTL;
 
-		Progress prog = new Progress(id, name, group, progress, max, color, ttl, creationTime, ZonedDateTime.now());
+		Progress prog = new Progress(id, name, group, progress, max, color, ttl, creationTime, ZonedDateTime.now(), history);
 
 		// notify listeners
 		updateListeners.forEach(l -> l.accept(prog));
@@ -136,6 +141,7 @@ public class ProgressService {
 		return String.format("%ds", dur.toSeconds());
 	}
 
-	public interface ProgressConsumer extends Consumer<Progress>{}
+	public interface ProgressConsumer extends Consumer<Progress> {}
+
 	public interface DeleteConsumer extends BiConsumer<String, String> {}
 }

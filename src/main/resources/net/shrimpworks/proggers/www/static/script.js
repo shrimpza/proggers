@@ -71,9 +71,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		info.querySelector(".created").textContent = new Date(bar.created * 1000).toLocaleString()
 		info.querySelector(".updated").textContent = new Date(bar.updated * 1000).toLocaleString()
-		info.querySelector(".value").textContent = `${bar.progress} / ${bar.max} (${((bar.progress / bar.max) * 100).toFixed(1)}%)`
+		info.querySelector(".value").textContent = `${bar.progress} / ${bar.max} (${(bar.percent).toFixed(1)}%); ETA ${friendlyTime(bar.eta)}`
 
 		return current
+	}
+
+	const friendlyTime = function(secs) {
+		let totalSeconds = secs;
+		let hours = Math.floor(totalSeconds / 3600);
+		totalSeconds %= 3600;
+		let minutes = Math.floor(totalSeconds / 60);
+		let seconds = Math.ceil(totalSeconds % 60);
+
+		return `${hours}h ${minutes}m ${seconds}s`;
 	}
 
 	// kick off the long polling cycle
